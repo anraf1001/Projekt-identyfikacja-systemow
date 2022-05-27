@@ -108,3 +108,38 @@ fig_hM = figure('Position', [100 100 1200 900],...
 plot(t, hM);
 title('Odpowiedź skokowa');
 grid on
+
+K = 12;
+T3 = 0.48 / 2.67;
+T4 = 0.48 / 3.67;
+
+ag = 20;
+tg = 0.4;
+sg = 4.54;
+
+sm = ag*t + sg - ag * tg;
+
+s = tf('s');
+Gm2 = K / (T3*s+1)^3;
+Gm3 = K / (T4*s+1)^4;
+T0 = (ag*tg - sg) / ag;
+T = (K - sg + ag*tg) / ag - T0;
+Gm0 = tf(K, [T, 1], 'IODelay', T0);
+
+[y_2, ~] = step(Gm2, t);
+[y_3, ~] = step(Gm3, t);
+[y_0, ~] = step(Gm0, t);
+hold on
+plot(t, y_2);
+plot(t, y_3);
+plot(t, y_0);
+legend('cumsum', '3 rzad', '4 rzad', 'opoznienie')
+
+% figure;
+% plot(t, hM);
+% hold on
+% plot(t, sm)
+% ylim([0, 13])
+
+sum((hM - y_2).^2);
+sum((hM - y_3).^2);
