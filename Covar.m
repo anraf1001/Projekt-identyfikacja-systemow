@@ -13,8 +13,8 @@ Yp = zeros(N,1);
 MU = (1/N)*sum(U);
 MY = (1/N)*sum(Y);
 
-Ud = U;% - MU*ones(N,1);              %odjêcie wartoœci œrednich
-Yd = Y;% - MY*ones(N,1);
+Ud = U; % - MU*ones(N,1);              %odjêcie wartoœci œrednich
+Yd = Y; % - MY*ones(N,1);
 
 if (tau>=0)
     Yp(1:(N-tau)) = Yd((1+tau):N);  
@@ -22,7 +22,7 @@ else
     Yp((1-tau):N) = Yd(1:(N+tau));  
 end
 
-CYU = (1/N)*(Ud'*Yp);                   %uwaga: normalizacja wartoœci¹ 'N'
-%CYU = (1/(N-abs(tau)))*(Ud'*Yp);        %uwaga: normalizacja wartoœci¹ 'N-|tau|'
+%CYU = (1/N)*(Ud'*Yp);                   %uwaga: normalizacja wartoœci¹ 'N'
+CYU = (1/(N-abs(tau)))*(Ud'*Yp);        %uwaga: normalizacja wartoœci¹ 'N-|tau|'
 
 C = CYU;

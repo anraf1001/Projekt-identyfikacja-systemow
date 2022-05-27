@@ -74,3 +74,37 @@ semilogx(omega, 20 * log10(abs(GN(k + 1))));
 title('Charakterystyka częstotliwościowa');
 xlabel('\omega [rad/s]');
 grid on
+
+%% Analiza korelacyjna - odpowiedź impulsowa
+M = 30;
+ryu = zeros(M, 1);
+for tau=0:M-1
+    ryu(tau + 1) = Covar([out, in], tau);
+end
+
+Ruu = zeros(M, M);
+for i=0:M-1
+    for j=0:M-1
+        Ruu(i+1, j+1) = Covar([in, in], j - i);
+    end
+end
+
+gM = 1 / Tp * pinv(Ruu) * ryu;
+t = ((0:M-1) * Tp)';
+
+fig_gM = figure('Position', [100 100 1200 900],...
+                'Name', 'Odpowiedź impulsowa',...
+                'NumberTitle', 'off');
+plot(t, gM);
+title('Odpowiedź impulsowa');
+grid on
+
+%% Analiza korelacyjna - odpowiedź skokowa
+hM = cumsum(gM);
+
+fig_hM = figure('Position', [100 100 1200 900],...
+                'Name', 'Odpowiedź skokowa',...
+                'NumberTitle', 'off');
+plot(t, hM);
+title('Odpowiedź skokowa');
+grid on
