@@ -70,8 +70,15 @@ fig_bode = figure('Position', [100 100 1200 900],...
                   'Name', 'Charakterystyka częstotliwościowa',...
                   'NumberTitle', 'off');
 
+subplot(2, 1, 1);
 semilogx(omega, 20 * log10(abs(GN(k + 1))));
-title('Charakterystyka częstotliwościowa');
+title('Charakterystyka amplitudowa');
+xlabel('\omega [rad/s]');
+grid on
+
+subplot(2, 1, 2);
+semilogx(omega, angle(GN(k + 1)));
+title('Charakterystyka fazowa');
 xlabel('\omega [rad/s]');
 grid on
 
