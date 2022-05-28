@@ -110,3 +110,66 @@ legend('zmierzona odpowiedź',...
 xlabel('t [s]');
 title('Porównanie LS');
 grid on
+
+%% J
+J1 = mean((out_wer - y1) .^ 2);
+J2 = mean((out_wer - y2) .^ 2);
+J3 = mean((out_wer - y3) .^ 2);
+J4 = mean((out_wer - y4) .^ 2);
+J5 = mean((out_wer - y5) .^ 2);
+
+%% Jfit
+Jfit1 = (1 - norm(out_wer - y1) / norm(out_wer - mean(out_wer)*ones(size(out_wer)))) * 100;
+Jfit2 = (1 - norm(out_wer - y2) / norm(out_wer - mean(out_wer)*ones(size(out_wer)))) * 100;
+Jfit3 = (1 - norm(out_wer - y3) / norm(out_wer - mean(out_wer)*ones(size(out_wer)))) * 100;
+Jfit4 = (1 - norm(out_wer - y4) / norm(out_wer - mean(out_wer)*ones(size(out_wer)))) * 100;
+Jfit5 = (1 - norm(out_wer - y5) / norm(out_wer - mean(out_wer)*ones(size(out_wer)))) * 100;
+
+%% FPE
+V1 = mean((out_est - Phi1 * pLS1) .^ 2);
+FPE1 = V1 * (1 + 1 / N_est) / (1 - 1 / N_est);
+
+V2 = mean((out_est - Phi2 * pLS2) .^ 2);
+FPE2 = V2 * (1 + 2 / N_est) / (1 - 2 / N_est);
+
+V3 = mean((out_est - Phi3 * pLS3) .^ 2);
+FPE3 = V3 * (1 + 3 / N_est) / (1 - 3 / N_est);
+
+V4 = mean((out_est - Phi4 * pLS4) .^ 2);
+FPE4 = V4 * (1 + 4 / N_est) / (1 - 4 / N_est);
+
+V5 = mean((out_est - Phi5 * pLS5) .^ 2);
+FPE5 = V5 * (1 + 5 / N_est) / (1 - 5 / N_est);
+
+%% AIC
+
+AIC1 = N_est * log(V1) + 2 * 1;
+AIC2 = N_est * log(V2) + 2 * 2;
+AIC3 = N_est * log(V3) + 2 * 3;
+AIC4 = N_est * log(V4) + 2 * 4;
+AIC5 = N_est * log(V5) + 2 * 5;
+
+%% Współczynnik uwarunkowania macierzy MI
+MI1 = 1/N_est * (Phi1' * Phi1);
+cond1 = sqrt(max(eig(MI1' * MI1))) / sqrt(min(eig(MI1' * MI1)));
+
+MI2 = 1/N_est * (Phi2' * Phi2);
+cond2 = sqrt(max(eig(MI2' * MI2))) / sqrt(min(eig(MI2' * MI2)));
+
+MI3 = 1/N_est * (Phi3' * Phi3);
+cond3 = sqrt(max(eig(MI3' * MI3))) / sqrt(min(eig(MI3' * MI3)));
+
+MI4 = 1/N_est * (Phi4' * Phi4);
+cond4 = sqrt(max(eig(MI4' * MI4))) / sqrt(min(eig(MI4' * MI4)));
+
+MI5 = 1/N_est * (Phi5' * Phi5);
+cond5 = sqrt(max(eig(MI5' * MI5))) / sqrt(min(eig(MI5' * MI5)));
+
+%% Podsumowanie
+table([J1; J2; J3; J4; J5],...
+      [Jfit1; Jfit2; Jfit3; Jfit4; Jfit5],...
+      [cond1; cond2; cond3; cond4; cond5],...
+      [FPE1; FPE2; FPE3; FPE4; FPE5],...
+      [AIC1; AIC2; AIC3; AIC4; AIC5],...
+      'VariableNames', {'J', 'J_FIT', 'cond', 'FPE', 'AIC'},...
+      'RowNames', {'M1', 'M2', 'M3', 'M4', 'M5'})
