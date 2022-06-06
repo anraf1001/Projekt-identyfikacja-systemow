@@ -24,22 +24,10 @@ title('Sygnał wyjściowy - napięcie termopary');
 xlabel('t [s]');
 grid on
 
-%% FFT sygnału wejściowego
+%% Charakterystyka częstotliwościowa
 k = 0:(N/2 - 1);
 omega = 2 * pi * k / (N * Tp);
 
-u_fft = fft(in);
-
-fig_u_fft = figure('Position', [100 100 1200 900],...
-                   'Name', 'FFT - sygnał wejściowy',...
-                   'NumberTitle', 'off');
-
-plot(omega, abs(u_fft(k + 1)));
-title('FFT - sygnał wejściowy');
-xlabel('\omega [rad/s]');
-grid on
-
-%% Charakterystyka częstotliwościowa
 Mw = 150;
 tau = -Mw:Mw;
 wH = 0.5 * (1 + cos(tau * pi / Mw));
@@ -70,15 +58,8 @@ fig_bode = figure('Position', [100 100 1200 900],...
                   'Name', 'Charakterystyka częstotliwościowa',...
                   'NumberTitle', 'off');
 
-subplot(2, 1, 1);
 semilogx(omega, 20 * log10(abs(GN(k + 1))));
 title('Charakterystyka amplitudowa');
-xlabel('\omega [rad/s]');
-grid on
-
-subplot(2, 1, 2);
-semilogx(omega, angle(GN(k + 1)));
-title('Charakterystyka fazowa');
 xlabel('\omega [rad/s]');
 grid on
 
@@ -103,11 +84,12 @@ fig_gM = figure('Position', [100 100 1200 900],...
                 'Name', 'Odpowiedź impulsowa',...
                 'NumberTitle', 'off');
 plot(t, gM);
-title('Odpowiedź impulsowa');
+title('Odpowiedź impulsowa - analiza korelacyjna');
+xlabel('t [s]');
 grid on
 
 %% Analiza korelacyjna - odpowiedź skokowa
-hM = cumsum(gM);
+hM = cumsum(gM * Tp);
 
 fig_hM = figure('Position', [100 100 1200 900],...
                 'Name', 'Odpowiedź skokowa',...
@@ -116,13 +98,13 @@ plot(t, hM);
 title('Odpowiedź skokowa');
 grid on
 
-K = 12;
+K = 0.96;
 T3 = 0.48 / 2.67;
 T4 = 0.48 / 3.67;
 
-ag = 20;
-tg = 0.4;
-sg = 4.54;
+ag = 3;
+tg = 0.38;
+sg = 0.38;
 
 sm = ag*t + sg - ag * tg;
 
@@ -140,13 +122,11 @@ hold on
 plot(t, y_2);
 plot(t, y_3);
 plot(t, y_0);
-legend('cumsum', '3 rzad', '4 rzad', 'opoznienie')
+legend('odp. analiza korelacyjna', 'model 3. rzędu', 'model 4. rzędu', 'inercja z opóźnieniem')
+xlabel('t [s]')
 
 % figure;
 % plot(t, hM);
 % hold on
 % plot(t, sm)
 % ylim([0, 13])
-
-sum((hM - y_2).^2);
-sum((hM - y_3).^2);
