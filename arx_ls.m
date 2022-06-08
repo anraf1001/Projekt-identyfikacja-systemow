@@ -18,14 +18,15 @@ out_wer = out(fix(N/2)+1:end);
 N_est = length(in_est);
 N_wer = length(in_wer);
 
-%% Identyfikacja - rząd 1
+%% Identyfikacja - rząd 1 (opóźnienie transportowe)
 % phiT(n) = [-y(n-1) u(n-1)]
 Phi1 = zeros(N_est, 2);
 Phi1(2, :) = [-out_est(1), 0];
 Phi1(3, :) = [-out_est(2), 0];
+Phi1(4, :) = [-out_est(3), 0];
 
-for k=4:N_est
-    Phi1(k, :) = [-out_est(k-1), in_est(k-3)];
+for k=5:N_est
+    Phi1(k, :) = [-out_est(k-1), in_est(k-4)];
 end
 
 pLS1 = pinv(Phi1) * out_est;
@@ -35,9 +36,10 @@ y_hat1 = zeros(N_wer, 1);
 y_hat1(1) = out_wer(1);
 y_hat1(2) = out_wer(1);
 y_hat1(3) = out_wer(1);
+y_hat1(4) = out_wer(1);
 
-for k=4:N_wer
-    y_hat1(k) = -pLS1(1) * out_wer(k-1) + pLS1(2) * in_wer(k-3);
+for k=5:N_wer
+    y_hat1(k) = -pLS1(1) * out_wer(k-1) + pLS1(2) * in_wer(k-4);
 end
 
 %% Identyfikacja - rząd 3
