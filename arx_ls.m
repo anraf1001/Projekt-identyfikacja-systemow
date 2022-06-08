@@ -9,14 +9,14 @@ N = length(in);
 t = (0:length(in) - 1) * Tp;
 
 %% Podział danych pomiarowych na 2 podzbiory
-in_est = in(1:fix(N/2));
-in_wer = in(fix(N/2)+1:end);
+N_est = fix(N/2);
+N_wer = length(in) - N_est;
 
-out_est = out(1:fix(N/2));
-out_wer = out(fix(N/2)+1:end);
+in_est = in(1:N_est);
+in_wer = in(N_est+1:end);
 
-N_est = length(in_est);
-N_wer = length(in_wer);
+out_est = out(1:N_est);
+out_wer = out(N_est+1:end);
 
 %% Identyfikacja - rząd 1 (opóźnienie transportowe)
 % phiT(n) = [-y(n-1) u(n-1)]
@@ -135,8 +135,8 @@ legend('zmierzona odpowiedź',...
        'odp. modelu - 3 rząd',...
        'odp. modelu - 4 rząd',...
        'odp. modelu - 5 rząd');
-xlabel('t [s]');
-title('Porównanie LS - odpowiedź modelu');
+xlabel('t [s]', 'FontSize', 14);
+title('Porównanie LS - odpowiedź modelu', 'FontSize', 14);
 grid on
 
 fig_arx_ls_pred = figure('Position', [100 100 1200 900],...
@@ -153,9 +153,12 @@ legend('zmierzona odpowiedź',...
        'odp. predyktora - 3 rząd',...
        'odp. predyktora - 4 rząd',...
        'odp. predyktora - 5 rząd');
-xlabel('t [s]');
-title('Porównanie LS - predyktor jednokrokowy');
+xlabel('t [s]', 'FontSize', 14);
+title('Porównanie LS - predyktor jednokrokowy', 'FontSize', 14);
 grid on
+
+exportgraphics(fig_arx_ls, 'ls_model.eps', 'Resolution', 300);
+exportgraphics(fig_arx_ls_pred, 'ls_pred.eps', 'Resolution', 300);
 
 %% J
 J1 = mean((out_wer - y_hat1) .^ 2);
